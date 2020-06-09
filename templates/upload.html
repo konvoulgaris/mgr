@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 class="uk-margin-top">Results</h1>
+<div class="uk-card uk-card-default uk-card-body uk-card-hover uk-margin uk-text-center">
+	<h3>KNN: {{ genres[knn|int]|upper }}</h3>
+	<h3>SVM: {{ genres[svm|int]|upper }}</h3>
+	<h3>NN: {{ genres[nn|int]|upper }}</h3>
+</div>
+<div class="uk-container uk-margin">
+	<img src="/api/upload/{{ vid }}.png" alt="Probability graph">
+</div>
+<div class="uk-card uk-card-default uk-card-body uk-card-hover uk-margin uk-width-1-2 uk-text-justify">
+	<h3 class="uk-card-title">Πιθανότητες</h3>
+	<p>Στην εκπαίδευση των μοντέλων είχαμε ένα ποσοστό ακρίβειας γύρω στο 70%, άρα υπάρχει μια πιθανότητα να μην έγινε σωστή αναγνώριση του τραγουδιού σας. Για αυτό, στον διπλάνο πίνακα θα βρείτε τις πιθανότητες που έχουν ανατεθεί σε κάθε είδος από το κάθε μοντέλο.</p>
+</div>
+<div class="uk-container uk-margin uk-flex">
+	<div class="uk-container uk-margin-right">
+		<ul class="uk-list uk-list-divider uk-margin-remove">
+			<li><b>GENRES</b></li>
+			{% for genre in genres %}
+			<li>{{ genre|upper }}</li>
+			{% endfor %}
+		</ul>
+	</div>
+	<div class="uk-container uk-margin-right">
+		<ul class="uk-list uk-list-divider uk-margin-remove">
+			<li><b>KNN</b></li>
+			{% for k in results.knn %}
+			<li>{{"%.2f" % k|float }}%</li>
+			{% endfor %}
+		</ul>
+	</div>
+	<div class="uk-container uk-margin-right">
+		<ul class="uk-list uk-list-divider uk-margin-remove">
+			<li><b>SVM</b></li>
+			{% for s in results.svm %}
+			<li>{{"%.2f" % s|float }}%</li>
+			{% endfor %}
+		</ul>
+	</div>
+	<div class="uk-container">
+		<ul class="uk-list uk-list-divider uk-margin-remove">
+			<li><b>NN</b></li>
+			{% for n in results.nn %}
+			<li>{{"%.2f" % n|float }}%</li>
+			{% endfor %}
+		</ul>
+	</div>
+</div>
+<p class="uk-text-meta uk-text-center uk-margin-bottom">Δημιουργήθηκε για την εργασία του μαθήματος 'Επικοινωνίες Πολυμέσων'</p>
+{% endblock %}

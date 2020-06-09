@@ -1,0 +1,13 @@
+# Visual Studio Code
+.vscode/
+
+# Python
+__pycache__/
+
+# Trained models
+models/
+
+# Various files & folders
+data/
+songs/
+

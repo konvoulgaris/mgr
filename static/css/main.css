@@ -1,0 +1,30 @@
+.uk-container {
+	position: relative;
+	background-color: whitesmoke;
+}
+
+@keyframes reveal {
+	0% {
+		transform: translateY(-200%);
+		opacity: 0;
+	}
+
+	75% {
+		transform: translateX(0);
+	}
+
+	100% {
+		opacity: 1;
+	}
+}
+
+.title-reveal {
+	animation: reveal 2s ease-in-out 0s 1 forwards;
+}
+
+#spinner {
+	display: none;
+	position: absolute;
+	top: 0;
+	margin-top: 5em;
+}
