@@ -4,9 +4,10 @@ from sklearn.model_selection import train_test_split
 from tensorflow import keras
 
 DATA_PATH = "data/gtzan.npz"
+NN_PATH = "models/nn.h5"
 
 if __name__ == "__main__":
-	data = np.load("data/gtzan.npz")
+	data = np.load(DATA_PATH)
 
 	X = data["features"]
 	y = data["labels"]
@@ -32,4 +33,4 @@ if __name__ == "__main__":
 	model.summary()
 	model.fit(X_train, y_train, batch_size=32, validation_data=(X_test, y_test), epochs=75)
 
-	model.save("models/nn.h5")
+	model.save(NN_PATH)

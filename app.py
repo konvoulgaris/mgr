@@ -7,15 +7,15 @@ from tensorflow import keras
 
 from lib.classifiers import KNN, SVM
 
-MGR_HOST = os.getenv("MGR_HOST", "0.0.0.0")
-MGR_PORT = os.getenv("PORT", "5000")
+HOST = "0.0.0.0"
+PORT = 5000
+GENRES_PATH = "data/genres.json"
+SONGS_PATH = "songs/"
 
-from api import api
+from routes.api import api
 
 app = Flask(__name__)
 app.register_blueprint(api, url_prefix="/api")
-
-app.config['UPLOAD_FOLDER'] = "uploads"
 
 @app.route("/", methods=["GET"])
 def index():
@@ -31,14 +31,15 @@ def upload():
 	knn = request.args["knn"]
 	svm = request.args["svm"]
 	nn = request.args["nn"]
+
 	genres = None
 	results = None
 
 	try:
-		with open("data/genres.json", "r") as file:
+		with open(GENRES_PATH, "r") as file:
 			genres = json.load(file)
 	
-		with open("songs/" + vid + ".json", "r") as file:
+		with open(SONGS_PATH + vid + ".json", "r") as file:
 			results = json.load(file)
 	except Exception:
 		return { "error": "Failed to read metadata" }, 500
@@ -51,7 +52,12 @@ def before_request():
 		g.knn = load("models/knn.joblib")
 		g.svm = load("models/svm.joblib")
 		g.nn = keras.models.load_model("models/nn.h5")
-		g.genres = json.load(open("data/genres.json", "r"))
+		
+		try:
+			with open(GENRES_PATH, "r") as file:
+				g.genres = json.load(file)
+		except Exception:
+			return { "error": "Failed to read metadata" }, 500
 
 if __name__ == "__main__":
-	app.run(MGR_HOST, MGR_PORT, debug=True)
+	app.run(HOST, PORT, debug=True)

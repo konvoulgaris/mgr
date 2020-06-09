@@ -12,17 +12,19 @@ from matplotlib.backends.backend_agg import FigureCanvasAgg
 
 from lib.process import process_audio
 
-MGR_SONG_PATH = str(os.getenv("MGR_SONG_PATH", "songs/"))
+FORMAT = "mp3"
+SONGS_PATH = "songs/"
+GENRES_PATH = "data/genres.json"
 
 api = Blueprint("api", __name__)
 
 YDL_OPT = {
-	"outtmpl": MGR_SONG_PATH + "%(id)s.%(ext)s",
+	"outtmpl": SONGS_PATH + "%(id)s.%(ext)s",
 	"format": "bestaudio/best",
 	"postprocessors": [
 		{
 			"key": "FFmpegExtractAudio",
-			"preferredcodec": "mp3",
+			"preferredcodec": FORMAT,
 		}
 	],
 }
@@ -40,7 +42,7 @@ def download():
 
 	YDL.download([url])
 	
-	return { "id": vid, "path": MGR_SONG_PATH + vid + ".mp3" }, 200
+	return { "id": vid, "path": SONGS_PATH + vid + "." + FORMAT}, 200
 
 @api.route("/process", methods=["POST"])
 def result():
@@ -71,7 +73,6 @@ def result():
 	for k in y_knn:
 		r_knn.append(k * 100)
 
-
 	audio = g.svm.pca.transform(audio)
 	
 	y_svm = g.svm.predict_proba(audio)[0]
@@ -83,7 +84,7 @@ def result():
 	prediction = { "knn": r_knn, "svm": r_svm, "nn": r_nn }
 
 	try:
-		with open(MGR_SONG_PATH + vid + ".json", "w") as file:
+		with open(SONGS_PATH + vid + ".json", "w") as file:
 			json.dump(prediction, file)
 	except Exception:
 		return { "error": "Failed to write metadata" }, 500
@@ -96,16 +97,16 @@ def upload_png(vid):
 	results = None
 
 	try:
-		with open("data/genres.json", "r") as file:
+		with open(GENRES_PATH, "r") as file:
 			genres = json.load(file)
 	
-		with open("songs/" + vid + ".json", "r") as file:
+		with open(SONGS_PATH + vid + ".json", "r") as file:
 			results = json.load(file)
 	except Exception:
 		return { "error": "Failed to read metadata" }, 500
 	
-
 	fig = Figure()
+	
 	axis = fig.add_subplot(1, 1, 1)
 	axis.plot(genres, results["knn"], label="KNN")
 	axis.plot(genres, results["svm"], label="SVM")
