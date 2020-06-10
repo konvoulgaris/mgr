@@ -10,6 +10,9 @@ from lib.classifiers import KNN, SVM
 HOST = "0.0.0.0"
 PORT = 5000
 GENRES_PATH = "data/genres.json"
+KNN_PATH = "models/knn.joblib"
+SVM_PATH = "models/svm.joblib"
+NN_PATH = "models/nn.h5"
 SONGS_PATH = "songs/"
 
 from routes.api import api
@@ -23,8 +26,7 @@ def index():
 
 @app.route("/upload", methods=["GET"])
 def upload():
-	if not ("id" in request.args and "knn" in request.args and "svm" in
-			request.args and "nn" in request.args):
+	if not ("id" in request.args and "knn" in request.args and "svm" in request.args and "nn" in request.args):
 		return { "error": "Need 'id', 'knn', 'svm' and 'nn' keys in request arguments" }, 400
 
 	vid = request.args["id"]
@@ -49,9 +51,9 @@ def upload():
 @app.before_request
 def before_request():
 	if not hasattr(g, "knn"):
-		g.knn = load("models/knn.joblib")
-		g.svm = load("models/svm.joblib")
-		g.nn = keras.models.load_model("models/nn.h5")
+		g.knn = load(KNN_PATH)
+		g.svm = load(SVM_PATH)
+		g.nn = keras.models.load_model(NN_PATH)
 		
 		try:
 			with open(GENRES_PATH, "r") as file:

@@ -15,9 +15,6 @@ from lib.process import process_audio
 FORMAT = "mp3"
 SONGS_PATH = "songs/"
 GENRES_PATH = "data/genres.json"
-
-api = Blueprint("api", __name__)
-
 YDL_OPT = {
 	"outtmpl": SONGS_PATH + "%(id)s.%(ext)s",
 	"format": "bestaudio/best",
@@ -28,9 +25,11 @@ YDL_OPT = {
 		}
 	],
 }
-
 BASE_URL = "https://www.youtube.com/watch?v="
 YDL = YoutubeDL(YDL_OPT)
+
+api = Blueprint("api", __name__)
+
 
 @api.route("/download", methods=["POST"])
 def download():

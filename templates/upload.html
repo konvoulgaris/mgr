@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1 class="uk-margin-top">Results</h1>
+<h1 class="uk-margin-top title-reveal">Results for:<br>{{ vid }}</h1>
 <div class="uk-card uk-card-default uk-card-body uk-card-hover uk-margin uk-text-center">
 	<h3>KNN: {{ genres[knn|int]|upper }}</h3>
 	<h3>SVM: {{ genres[svm|int]|upper }}</h3>
