@@ -1,4 +1,3 @@
-import os
 import json
 
 from flask import Flask, render_template, request, g, Response
@@ -6,18 +5,20 @@ from joblib import load
 from tensorflow import keras
 
 from lib.classifiers import KNN, SVM
+from routes.api import api
 
 HOST = "0.0.0.0"
 PORT = 5000
-GENRES_PATH = "data/genres.json"
 KNN_PATH = "models/knn.joblib"
 SVM_PATH = "models/svm.joblib"
 NN_PATH = "models/nn.h5"
+GENRES_PATH = "data/genres.json"
 SONGS_PATH = "songs/"
 
-from routes.api import api
-
+# Create flask app
 app = Flask(__name__)
+
+# Connect flask blueprints
 app.register_blueprint(api, url_prefix="/api")
 
 @app.route("/", methods=["GET"])
@@ -34,19 +35,15 @@ def upload():
 	svm = request.args["svm"]
 	nn = request.args["nn"]
 
-	genres = None
 	results = None
 
 	try:
-		with open(GENRES_PATH, "r") as file:
-			genres = json.load(file)
-	
 		with open(SONGS_PATH + vid + ".json", "r") as file:
 			results = json.load(file)
 	except Exception:
 		return { "error": "Failed to read metadata" }, 500
 
-	return render_template("upload.html", vid=vid, knn=knn, svm=svm, nn=nn, genres=genres, results=results)
+	return render_template("upload.html", vid=vid, knn=knn, svm=svm, nn=nn, genres=g.genres, results=results)
 
 @app.before_request
 def before_request():

@@ -4,9 +4,10 @@ from sklearn.model_selection import train_test_split
 from tensorflow import keras
 
 DATA_PATH = "data/gtzan.npz"
-NN_PATH = "models/nn.h5"
+EXPORT_PATH = "models/nn.h5"
 
 if __name__ == "__main__":
+	# Load data
 	data = np.load(DATA_PATH)
 
 	X = data["features"]
@@ -14,6 +15,7 @@ if __name__ == "__main__":
 
 	X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
 
+	# Create model
 	model = keras.Sequential([
 		keras.layers.Flatten(input_shape=(X.shape[1], X.shape[2])),
 
@@ -29,8 +31,10 @@ if __name__ == "__main__":
 		keras.layers.Dense(10, activation='softmax')
 	])
 
+	# Generate model
 	model.compile(optimizer=keras.optimizers.Adam(learning_rate=0.0001), loss=keras.losses.SparseCategoricalCrossentropy(), metrics=['accuracy'])
 	model.summary()
 	model.fit(X_train, y_train, batch_size=32, validation_data=(X_test, y_test), epochs=75)
 
-	model.save(NN_PATH)
+	# Export model
+	model.save(EXPORT_PATH)
