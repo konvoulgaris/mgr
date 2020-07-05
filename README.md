@@ -5,4 +5,4 @@ A music genre recognition system created for my course on [Multimedia Communicat
 You can download the data files required for generating the models [here](https://drive.google.com/drive/folders/1eyHjQpZ5zFQIyb9rWUCPONCQDInrdyg9?usp=sharing).
 
 ## License
-Licensed under the [MIT License](LICENSE)
+Licensed under the [MIT License](LICENSE).
